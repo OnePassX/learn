@@ -1,0 +1,152 @@
+package com
+{
+	import flash.display.DisplayObject;
+	import flash.display.Loader;
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.HTTPStatusEvent;
+	import flash.events.IOErrorEvent;
+	import flash.events.MouseEvent;
+	import flash.events.ProgressEvent;
+	import flash.net.URLRequest;
+	
+	/**
+	 * 处理swf的异步加载
+	 * @author edgewalker
+	 */
+	public class SwfLoader extends Loader
+	{
+		private var f1, f2:Function;
+		
+		public function SwfLoader()
+		{
+			super();
+			f1 = null;
+			f2 = null;
+		
+		}
+		
+		/*
+		 * url，加载swf路径
+		 * loadComFunc，加载完成时执行
+		 * playComFunc，播放完成时执行
+		 */
+		public function loadSwf(url:String, loadComFunc:Function = null, playComFunc:Function = null):void
+		{
+			
+			try
+			{
+				unloadAndStop();
+				load(new URLRequest(url));
+				this.name = name;
+				contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+				contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+				contentLoaderInfo.addEventListener(Event.INIT, initHandler);
+				contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+				contentLoaderInfo.addEventListener(Event.OPEN, openHandler);
+				contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				contentLoaderInfo.addEventListener(Event.UNLOAD, unLoadHandler);
+				
+			}
+			catch (e:Error)
+			{
+				trace("loadSwfError", e);
+			}
+			f1 = loadComFunc;
+			f2 = playComFunc;
+		
+		}
+		
+		private function completeHandler(e:Event):void
+		{
+			//trace("completeHandler: " + e.target.loader.name);
+			
+
+			if (f1 != null)
+			{
+				f1.call();
+			}
+			if (f2 != null)
+			{
+				var mc:MovieClip = e.target.loader.content as MovieClip;
+				if(mc!=null)mc.addFrameScript(mc.totalFrames-1,f2);
+			}
+		}
+		
+		
+		private function httpStatusHandler(event:HTTPStatusEvent):void
+		{
+			//trace("httpStatusHandler: " + event);
+		}
+		
+		private function initHandler(event:Event):void
+		{
+			//trace("initHandler: " + event);
+		}
+		
+		private function ioErrorHandler(event:IOErrorEvent):void
+		{
+			trace("ioErrorHandler: " + event);
+		}
+		
+		private function openHandler(event:Event):void
+		{
+			//trace("openHandler: " + event);
+		}
+		
+		private function progressHandler(event:ProgressEvent):void
+		{
+			//trace("progressHandler: bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+		}
+		
+		private function unLoadHandler(event:Event):void
+		{
+			//LogManager.print("unLoadHandler");
+		}
+		
+		//获取加载的swf实例
+		public function getSwf():MovieClip
+		{ //trace(s, loadSeqA,loadSeqA.indexOf(s));
+			return MovieClip(this.content);
+		}
+		
+		public function getThis():DisplayObject {
+			return this.content;
+		}
+		
+		//暂停swf到特定帧
+		public function pauseSwf(fram:int = 0):void
+		{
+			var mc:MovieClip=getSwf();
+			if (mc)
+			{
+				if (fram > 0)
+				{
+					mc.gotoAndStop(fram);
+				}
+				else
+				{
+					mc.stop();
+				}
+			}
+		}
+		
+		//继续播放swf
+		public function resumeSwf(fram:int = 0):void
+		{
+			var mc:MovieClip = getSwf();
+			if (mc != null)
+				if (fram > 0)
+				{
+					mc.gotoAndPlay(fram);
+				}
+				else
+				{
+					mc.play();
+				}
+		}
+		
+	}
+
+}
