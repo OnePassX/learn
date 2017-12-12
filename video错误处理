@@ -1,0 +1,15 @@
+
+var objet:Object = new Object;
+objet.onMetaData = function(info:ReferenceError){
+    return ;
+}
+objet.onPlayStatus = function(info:ReferenceError){
+		return ;
+}
+var client:Object=new Object();
+client.onMetaData=onMetaData;
+function onMetaData(data:Object):void
+{
+	  var _duration:uint=new uint();
+	  _duration=data.duration;
+}
