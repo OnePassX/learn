@@ -1,0 +1,77 @@
+package com 
+{
+	import flash.display.Loader;
+	import flash.net.URLRequest;
+	import flash.events.*;
+	import flash.display.DisplayObject;
+	import flash.display.*;
+	/**
+	 * ...
+	 * @author 
+	 */
+	public class ImageLoader extends Loader
+	{
+		
+		public function ImageLoader() 
+		{
+			super();
+		}
+		public function loadImg(url:String):void{
+			try 
+			{
+				load(new URLRequest(url));
+				contentLoaderInfo.addEventListener(Event.COMPLETE,completeHandler);
+				contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS,httpStatusHandler);
+				contentLoaderInfo.addEventListener(Event.INIT,initHandler);
+				contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler);
+				contentLoaderInfo.addEventListener(Event.OPEN,openHandler);
+				contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS,progressHandler);
+				contentLoaderInfo.addEventListener(Event.UNLOAD,unLoadHandler);
+			}
+			catch (err:Error)
+			{
+				trace("loadImgError",err);
+			}
+		}
+		private function completeHandler(e:Event):void
+		{
+			dispatchEvent(new Event(Event.COMPLETE));
+			var bmp:Bitmap = Bitmap((LoaderInfo)(e.target).content);
+			bmp.smoothing = true;
+		}
+		private function httpStatusHandler(event:HTTPStatusEvent):void
+		{
+			//trace("httpStatusHandler: " + event);
+		}
+		
+		private function initHandler(event:Event):void
+		{
+			//trace("initHandler: " + event);
+		}
+		
+		private function ioErrorHandler(event:IOErrorEvent):void
+		{
+			trace("ioErrorHandler: " + event);
+		}
+		
+		private function openHandler(event:Event):void
+		{
+			//trace("openHandler: " + event);
+		}
+		
+		private function progressHandler(event:ProgressEvent):void
+		{
+			//trace("progressHandler: bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+		}
+		
+		private function unLoadHandler(event:Event):void
+		{
+			//trace("unLoadHandler: "+ name+" is unloaded. "+ event);
+		}
+		
+		public function getThis():DisplayObject {
+			return this.content;
+		}
+	}
+
+}
