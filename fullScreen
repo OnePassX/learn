@@ -1,0 +1,3 @@
+//两种全屏模式方法
+stage.displayState = "fullScreen";//import flash.desktop.NativeApplication;Air格式下发布用
+fscommand("fullscreen", "true");//import flash.system.fscommand;flash格式下发布用
