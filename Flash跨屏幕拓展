@@ -1,0 +1,12 @@
+//Flash包为AIR
+import flash.display.Screen;
+var screens:Array=Screen.screens;
+var rect:Rectangle=new Rectangle();
+
+for(var i:int=0;i<screens.length;i++)
+{
+	rect=rect.union(screens[i].bounds);
+}
+
+trace(rect);
+this.stage.nativeWindow.bounds=rect;
