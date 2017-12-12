@@ -1,0 +1,65 @@
+//切换swf和图片不闪屏，流畅切过
+private var container:Sprite = new Sprite();
+public var sl:SwfLoader;
+public var il:ImageLoader;
+public var loadComFunc,playComFunc:Function;
+
+addChildAt(container, 0);
+sl = new SwfLoader();
+loadswf(url);
+
+//加载image文件函数
+private function loadimage(s:String):void{
+	var bmp:Bitmap = getSnap(container);
+	trace(bmp);
+	//il.unloadAndStop();
+	il.loadImg(s);
+	il.addEventListener(Event.COMPLETE, onilcom);
+	trace("image");
+}
+
+private function onilcom(e:Event)
+{
+	//il.getThis().width = stage.stageWidth
+	//il.getThis().height = stage.stageHeight;
+	removeAllThings();
+	container.addChild(il.getThis());
+}
+
+//加载swf文件函数
+private function loadswf(s:String):void
+{
+	var bmpswf:Bitmap = getSnap(container);	
+	//container.removeChildren();
+	sl.unloadAndStop();
+	sl.loadSwf(s,loadfunc, function(){if (playComFunc != null) playComFunc.call(); });
+	trace("swf");
+}
+
+//加载完成函数
+private function loadfunc()
+{
+	var mc:MovieClip = MovieClip(sl.getThis());
+	if (mc == null) return;
+	container.removeChildren();
+	container.addChild(mc);
+}
+
+//移除加载事件
+private function removeAllThings()
+{
+	if (container.contains(sl)) Loader(container.removeChild(sl)).unloadAndStop();
+	//if (container.contains(il)) container.removeChild(il);
+	trace("remove");
+}
+
+//闪照
+public static function getSnap(tar:Sprite):Bitmap
+{
+	if (tar.width == 0 || tar.height == 0||tar.width>8096||tar.height>8096) return null;
+	var bmpd:BitmapData = new BitmapData(tar.width, tar.height, true, 0x000000);
+	bmpd.draw(tar);
+	if (bmpd)
+		return new Bitmap(bmpd);
+	return null;
+}
