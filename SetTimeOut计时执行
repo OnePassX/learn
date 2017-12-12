@@ -1,0 +1,18 @@
+import flash.utils.SetIntervalTimer;
+import flash.utils.*;
+
+private var intervalId:uint;
+private function SetTimeoutExample(){
+			var delay:Number = 180000;
+			intervalId= setTimeout(fanhuifunc, delay);
+			trace("开始计时");
+}
+private function ClearTimeOutExample(){
+			clearTimeout(intervalId);
+			trace("清除SetTimeOut");
+}
+private function  fanhuifunc(){
+			bm.dispatchEvent(new EdgeEvent(EdgeEvent.EEvent, TConstant.HOME));
+			//loadId(0);
+			//ec.stopDelay();
+}
